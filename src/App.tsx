@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useRef } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { OrbitControls, RoundedBox, ContactShadows } from '@react-three/drei';
@@ -186,10 +187,10 @@ export default function App() {
     multipartForm.append('video', videoFile);
 
     try {
-      const response = await fetch('http://localhost:5000/api/scan-video', { method: 'POST', body: multipartForm });
+      const response = await fetch('https://phone-twin-backend.onrender.com/api/scan-video', { method: 'POST', body: multipartForm });
       const parsedData = await response.json();
       
-      if (parsedData.coordinates) {
+      if (parsedData.coordinates) { 
         setAppGrid(parsedData.coordinates);
         if (parsedData.caseColor) setCaseColor(parsedData.caseColor);
         if (parsedData.systemTime) setSystemTime(parsedData.systemTime);
