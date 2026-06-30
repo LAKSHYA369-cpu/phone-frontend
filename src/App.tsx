@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { OrbitControls, ContactShadows } from '@react-three/drei';
 import * as THREE from 'three';
-import { Trash2, Cpu, Battery, Wifi, Signal, Upload, Plus, ArrowLeft, Send, Chrome, Search, Sliders, Smartphone, Save, Globe } from 'lucide-react';
+import { Trash2, Cpu, Battery, Wifi, Signal, Upload, Plus, ArrowLeft, Send, Search, Sliders, Smartphone, Save, Globe } from 'lucide-react';
 
 interface AppCoordinate {
   name: string;
@@ -411,7 +411,14 @@ export default function App() {
                     <input type="text" defaultValue="https://www.google.com" className="bg-transparent text-xs text-slate-200 flex-1 outline-none font-medium" />
                   </div>
                   <div className="flex-1 bg-slate-900/40 border border-slate-800 rounded-2xl flex flex-col items-center justify-center p-6 text-center">
-                    <Chrome className="w-10 h-10 text-indigo-400/80 animate-pulse mb-3" />
+                    {/* Clean SVG replacement for Chrome logo */}
+                    <svg className="w-12 h-12 mb-3 text-indigo-400 animate-pulse" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <circle cx="12" cy="12" r="10" />
+                      <circle cx="12" cy="12" r="4" />
+                      <line x1="21.17" y1="8" x2="12" y2="8" />
+                      <line x1="3.95" y1="6.06" x2="8.54" y2="14" />
+                      <line x1="10.88" y1="21.94" x2="15.46" y2="14" />
+                    </svg>
                     <h4 className="font-bold text-white text-xs uppercase tracking-wider">Chromium Render Stack Online</h4>
                     <p className="text-[10px] text-slate-500 mt-1 max-w-xs leading-relaxed">Network sandbox execution frame isolated successfully.</p>
                   </div>
