@@ -1,12 +1,29 @@
-
 import React, { useState, useEffect, useRef } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { OrbitControls, RoundedBox, ContactShadows } from '@react-three/drei';
 import * as THREE from 'three';
-import { Video, Sliders, Play, Trash2, Cpu, Sparkles, Smartphone, Eye, X, MessageSquare, Battery, Wifi, Signal } from 'lucide-react';
+import { Video, Play, Trash2, Cpu, Sparkles, Smartphone, Eye, MessageSquare, Battery, Wifi, Signal } from 'lucide-react';
+
+// Define explicit types for the app coordinate nodes
+interface AppCoordinate {
+  name: string;
+  x: number;
+  y: number;
+}
+
+// Define explicit types for the Phone component properties
+interface PhoneProps {
+  screenTexUrl: string | null;
+  caseColor: string;
+  appCoords: AppCoordinate[];
+  onAppClick: (name: string) => void;
+  isLocked: boolean;
+  setIsLocked: (locked: boolean) => void;
+  systemTime: string;
+}
 
 // --- STABLE GLASS PHYSICAL 3D SMARTPHONE COMPONENT ---
-function GlassChassisPhone({ screenTexUrl, caseColor, appCoords, onAppClick, isLocked, setIsLocked, systemTime }) {
+function GlassChassisPhone({ screenTexUrl, caseColor, appCoords, onAppClick, isLocked, setIsLocked, systemTime }: PhoneProps) {
   const modelPivotGroup = useRef<THREE.Group>(null);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const [compositeTexture, setCompositeTexture] = useState<THREE.CanvasTexture | null>(null);
@@ -79,7 +96,7 @@ function GlassChassisPhone({ screenTexUrl, caseColor, appCoords, onAppClick, isL
 
       // 4. Render debugging asset overlay targets visually if unlocked
       if (!isLocked && appCoords.length > 0) {
-        appCoords.forEach(app => {
+        appCoords.forEach((app: AppCoordinate) => {
           ctx.strokeStyle = 'rgba(99, 102, 241, 0.4)';
           ctx.lineWidth = 4;
           ctx.strokeRect((app.x * canvas.width / 100) - 75, (app.y * canvas.height / 100) - 75, 150, 150);
@@ -113,7 +130,7 @@ function GlassChassisPhone({ screenTexUrl, caseColor, appCoords, onAppClick, isL
         const cx = uv.x * 100;
         const cy = (1 - uv.y) * 100;
 
-        const pairedAppNode = appCoords.find(node => 
+        const pairedAppNode = appCoords.find((node: AppCoordinate) => 
           Math.abs(node.x - cx) < 14 && Math.abs(node.y - cy) < 14
         );
         
@@ -143,7 +160,7 @@ export default function App() {
   const [videoPreview, setVideoPreview] = useState<string | null>(null);
   const [extractedScreen, setExtractedScreen] = useState<string | null>(null);
   const [caseColor, setCaseColor] = useState('#0f172a');
-  const [appGrid, setAppGrid] = useState<any[]>([]);
+  const [appGrid, setAppGrid] = useState<AppCoordinate[]>([]);
   const [activeAppName, setActiveAppName] = useState<string | null>(null);
   
   const [isLocked, setIsLocked] = useState(true);
@@ -187,10 +204,11 @@ export default function App() {
     multipartForm.append('video', videoFile);
 
     try {
+      // NOTE: Make sure to replace this URL with your exact Render backend URL!
       const response = await fetch('https://phone-twin-backend.onrender.com/api/scan-video', { method: 'POST', body: multipartForm });
       const parsedData = await response.json();
       
-      if (parsedData.coordinates) { 
+      if (parsedData.coordinates) {
         setAppGrid(parsedData.coordinates);
         if (parsedData.caseColor) setCaseColor(parsedData.caseColor);
         if (parsedData.systemTime) setSystemTime(parsedData.systemTime);
@@ -312,7 +330,7 @@ export default function App() {
               caseColor={caseColor}
               appCoords={appGrid}
               systemTime={systemTime}
-              onAppClick={(name) => {
+              onAppClick={(name: string) => {
                 try {
                   let actx = new (window.AudioContext || (window as any).webkitAudioContext)();
                   let oscilNode = actx.createOscillator(); let soundGain = actx.createGain();
