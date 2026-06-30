@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { OrbitControls, RoundedBox, ContactShadows } from '@react-three/drei';
 import * as THREE from 'three';
-import { Trash2, Cpu, Battery, Wifi, Signal, Upload, ShoppingBag, Plus, ArrowLeft, Send, User } from 'lucide-react';
+import { Trash2, Cpu, Battery, Wifi, Signal, Upload, Plus, ArrowLeft, Send, User } from 'lucide-react';
 
 interface AppCoordinate {
   name: string;
@@ -32,7 +32,6 @@ function GlassChassisPhone({ screenTexUrl, caseColor, appCoords, onAppClick, isL
   const textureRef = useRef<THREE.CanvasTexture | null>(null);
   const wallpaperImgRef = useRef<HTMLImageElement | null>(null);
 
-  // Initialize canvas asset layers once to maximize performance
   useEffect(() => {
     const canvas = document.createElement('canvas');
     canvas.width = 512;
@@ -45,7 +44,6 @@ function GlassChassisPhone({ screenTexUrl, caseColor, appCoords, onAppClick, isL
     textureRef.current = tex;
   }, []);
 
-  // Fast pre-loading for background wallpaper textures
   useEffect(() => {
     if (screenTexUrl) {
       const img = new Image();
@@ -67,7 +65,6 @@ function GlassChassisPhone({ screenTexUrl, caseColor, appCoords, onAppClick, isL
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
-    // Fast Canvas Draw Pipeline
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
     if (wallpaperImgRef.current) {
@@ -159,7 +156,6 @@ export default function App() {
     { contact: "Alex", lastMessage: "The architecture runs smoothly.", time: "10:14 AM" }
   ]);
 
-  // Compute absolute coordinate arrays smoothly without recalculating layout steps unnecessarily
   const appGrid = useMemo(() => {
     const spaces = [{ x: 25, y: 22 }, { x: 50, y: 22 }, { x: 75, y: 22 }, { x: 25, y: 42 }, { x: 50, y: 42 }, { x: 75, y: 42 }];
     return installedApps.map((name, i) => ({
@@ -195,7 +191,7 @@ export default function App() {
     selectedFiles.forEach(f => fd.append('files', f));
 
     try {
-      // NOTE: Swap this placeholder address string with your exact production backend Render deployment link URL.
+      // Remember to put your exact backend Render URL below!
       const res = await fetch('https://phone-twin-backend.onrender.com/api/scan-video', { method: 'POST', body: fd });
       const data = await res.json();
 
