@@ -2,20 +2,23 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { OrbitControls, RoundedBox, ContactShadows } from '@react-three/drei';
 import * as THREE from 'three';
-import { Video, Play, Trash2, Cpu, Sparkles, Smartphone, Eye, MessageSquare, Battery, Wifi, Signal, Upload, ShoppingBag, Plus, PlusCircle, ArrowLeft, Send, Settings, User } from 'lucide-react';
+import { Trash2, Cpu, Battery, Wifi, Signal, Upload, ShoppingBag, Plus, ArrowLeft, Send, User } from 'lucide-react';
 
+// Define explicit types for the app coordinate nodes
 interface AppCoordinate {
   name: string;
   x: number;
   y: number;
 }
 
+// Define explicit types for the Chat messages
 interface ChatMessage {
   contact: string;
   lastMessage: string;
   time: string;
 }
 
+// Define explicit types for the Phone component properties
 interface PhoneProps {
   screenTexUrl: string | null;
   caseColor: string;
@@ -66,7 +69,6 @@ function GlassChassisPhone({ screenTexUrl, caseColor, appCoords, onAppClick, isL
       if (wallpaperImage) {
         ctx.drawImage(wallpaperImage, 0, 0, canvas.width, canvas.height);
       } else {
-        // High premium modern stock configuration wallpaper look
         const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
         gradient.addColorStop(0, '#1e1b4b');
         gradient.addColorStop(0.5, '#311042');
@@ -75,7 +77,6 @@ function GlassChassisPhone({ screenTexUrl, caseColor, appCoords, onAppClick, isL
         ctx.fillRect(0, 0, canvas.width, canvas.height);
       }
 
-      // Blurry status banner strip
       ctx.fillStyle = 'rgba(0, 0, 0, 0.3)';
       ctx.fillRect(0, 0, canvas.width, 90);
 
@@ -95,7 +96,6 @@ function GlassChassisPhone({ screenTexUrl, caseColor, appCoords, onAppClick, isL
         ctx.fillText('🔒 Click Screen to Scan Fingerprint', canvas.width / 2, 1900);
         ctx.textAlign = 'left';
       } else {
-        // Draw physical indicator boxes on the running surface mesh context
         appCoords.forEach(app => {
           ctx.fillStyle = 'rgba(255, 255, 255, 0.15)';
           ctx.beginPath();
@@ -160,19 +160,16 @@ export default function App() {
   const [processing, setProcessing] = useState(false);
   const [systemTime] = useState('12:45');
 
-  // Interactive System Behavioral states (WhatsApp Data store mimicking predictions)
   const [chats, setChats] = useState<ChatMessage[]>([
     { contact: "Mom", lastMessage: "Where are you?", time: "12:01 PM" },
     { contact: "Tech Project Lead", lastMessage: "Let's push the twin live on Render", time: "10:14 AM" }
   ]);
   const [newMsg, setNewMsg] = useState("");
 
-  // Store/Market App Manager states
   const [customPhotos, setCustomPhotos] = useState<string[]>([]);
   const [installedApps, setInstalledApps] = useState<string[]>(["WhatsApp", "Photos", "Camera", "App Store", "Settings"]);
 
   useEffect(() => {
-    // Generate initial generic layout positioning
     rebuildLayoutMap(installedApps);
   }, [installedApps]);
 
@@ -211,7 +208,7 @@ export default function App() {
     clearWorkspace();
     setIsLocked(false);
     setCaseColor('#1e1b4b');
-    setExtractedScreen(null); // Triggers our beautiful high stock gradient background
+    setExtractedScreen(null);
   };
 
   const uploadAndCompileTwin = async () => {
@@ -234,7 +231,6 @@ export default function App() {
         if (data.caseColor) setCaseColor(data.caseColor);
         if (data.whatsappData?.recentChats) setChats(data.whatsappData.recentChats);
         
-        // Pick the first uploaded image file to simulate screen wallpaper if available
         const imgFile = selectedFiles.find(f => f.type.startsWith('image/'));
         if (imgFile) {
           setExtractedScreen(URL.createObjectURL(imgFile));
@@ -297,7 +293,7 @@ export default function App() {
               <div className="grid grid-cols-4 gap-2 bg-slate-950/60 p-2.5 border border-slate-800 rounded-xl max-h-24 overflow-y-auto">
                 {filePreviews.map((src, idx) => (
                   <div key={idx} className="relative aspect-square rounded-md overflow-hidden bg-black border border-slate-700">
-                    <img src={src} className="w-full h-full object-cover" onError={(e) => { (e.target as HTMLElement).style.display = 'none'; }} />
+                    <img src={src} alt="preview" className="w-full h-full object-cover" onError={(e) => { (e.target as HTMLElement).style.display = 'none'; }} />
                   </div>
                 ))}
               </div>
@@ -386,7 +382,7 @@ export default function App() {
                   <div className="grid grid-cols-3 gap-2">
                     <div className="aspect-square bg-gradient-to-tr from-slate-800 to-slate-900 rounded-xl border border-slate-700/60 flex items-center justify-center text-slate-500 font-bold">Sample.jpg</div>
                     {customPhotos.map((src, i) => (
-                      <img key={i} src={src} className="aspect-square object-cover rounded-xl border border-slate-800 shadow-md" />
+                      <img key={i} src={src} alt="custom payload" className="aspect-square object-cover rounded-xl border border-slate-800 shadow-md" />
                     ))}
                   </div>
                 </div>
@@ -442,12 +438,6 @@ export default function App() {
               )}
 
             </div>
-          </div>
-        )}
-
-        {isLocked && (
-          <div className="absolute top-6 right-6 bg-indigo-600 text-white font-bold text-[9px] tracking-widest uppercase px-3 py-1.5 rounded-full z-20 shadow-md animate-pulse">
-            🔑 Biometric Locked
           </div>
         )}
 
